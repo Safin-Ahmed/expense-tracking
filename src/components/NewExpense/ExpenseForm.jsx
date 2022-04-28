@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Button from "../UI/Button";
 import "./ExpenseForm.css";
 const ExpenseForm = (props) => {
   //   const [enteredTitle, setEnteredTitle] = useState("");
@@ -9,6 +10,10 @@ const ExpenseForm = (props) => {
     amount: "",
     date: "",
   });
+  const [showForm, setShowForm] = useState(false);
+  const handleShowForm = () => {
+    setShowForm(!showForm);
+  };
   const titleChangeHandler = (e) => {
     // setForm({ ...form, title: e.target.value }); (This is not the right way)
     setForm((prevState) => {
@@ -16,14 +21,19 @@ const ExpenseForm = (props) => {
     });
   };
   const amountChangeHandler = (e) => {
-    setForm({ ...form, amount: e.target.value });
+    setForm((prevState) => {
+      return { ...prevState, amount: +e.target.value };
+    });
   };
   const dateChangeHandler = (e) => {
-    setForm({ ...form, date: new Date(e.target.value) });
+    setForm((prevState) => {
+      return { ...prevState, date: new Date(e.target.value) };
+    });
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
+    console.log(form);
     props.onSaveExpenseData(form);
     setForm({
       title: "",
@@ -31,6 +41,9 @@ const ExpenseForm = (props) => {
       date: "",
     });
   };
+  if (!showForm) {
+    return <Button onClick={handleShowForm}>Add New Expense</Button>;
+  }
   return (
     <form onSubmit={submitHandler}>
       <div className="new-expense__controls">
@@ -60,7 +73,8 @@ const ExpenseForm = (props) => {
         </div>
       </div>
       <div className="new-expense__actions">
-        <button type="submit">Add Expense</button>
+        <Button onClick={handleShowForm}>Cancel</Button>
+        <Button type="submit">Add expense</Button>
       </div>
     </form>
   );
